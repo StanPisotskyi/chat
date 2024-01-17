@@ -2,7 +2,8 @@ const express = require('express');
 const path = require('path');
 const socketIO = require('socket.io');
 const http = require('http');
-const { generateMessage } = require('./utils/message')
+const { generateMessage } = require('./utils/message');
+const { isValidString } = require('./utils/helper');
 const app = express();
 const publicPath = path.join(__dirname, '/../public');
 const port = 3000;
@@ -14,17 +15,39 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
     console.log('Client connected!');
 
-    socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat!'));
+    socket.on('join', (joinChat, callback) => {
+        console.log('Join chat:', joinChat);
 
-    socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined the chat!'));
+        const { name, room } = joinChat;
+
+        if (!isValidString(name) || !isValidString(room)) {
+            callback('Both fields are required!');
+        }
+
+        socket.join(room);
+
+        socket.emit('newMessage', generateMessage('Admin', `Welcome to the room: ${room}!`));
+
+        socket.broadcast.to(room).emit('newMessage', generateMessage('Admin', `New user joined the room: ${room}!`));
+
+        callback();
+    });
 
     socket.on('createMessage', (message, callback) => {
         console.log('Create message:', message);
 
         const { from, text } = message;
 
+        if (!isValidString(from)) {
+            callback('User is unknown.');
+        }
+
+        if (!isValidString(text)) {
+            callback('Text is empty.');
+        }
+
         socket.broadcast.emit('newMessage', generateMessage(from, text));
-        callback('This is a server');
+        callback();
     });
 
     socket.on('disconnect', () => {

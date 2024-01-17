@@ -4,28 +4,30 @@
     <meta charset="UTF-8">
     <title>Chat</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/chat.css">
 </head>
 <body>
     <div class="row justify-content-md-center pt-3">
         <div class="col col-sm-6">
-            <form id="joinForm">
+            <form id="messageForm">
                 <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Name">
+                    <label for="message">Message</label>
+                    <textarea class="form-control" name="message" id="message" rows="3"></textarea>
                 </div>
-                <div class="form-group">
-                    <label for="room">Room</label>
-                    <input type="text" class="form-control" id="room" name="room" placeholder="Room">
-                </div>
-                <button type="submit" class="btn btn-primary">Join</button>
+                <button type="submit" class="btn btn-primary">Fire!</button>
             </form>
         </div>
     </div>
-
+    <div class="row justify-content-md-center pt-3">
+        <div class="col col-sm-6">
+            <ul id="messagesWrapper"></ul>
+        </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
     <script
             src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
             crossorigin="anonymous"></script>
-    <script type="text/javascript" src="/js/index.js"></script>
+    <script type="text/javascript" src="/js/chat.js"></script>
 </body>
 </html>
