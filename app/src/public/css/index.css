@@ -1,0 +1,10 @@
+ul {
+    list-style: none;
+    overflow-y: auto;
+    max-height: 400px;
+}
+
+li {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}

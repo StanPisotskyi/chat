@@ -1,0 +1,16 @@
+services:
+  app:
+    container_name: chat-server
+    build:
+      dockerfile: ./docker/app/Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./app/src:/usr/src/app/src
+    networks:
+      - chat
+
+networks:
+  chat:
+    name: chat
+    driver: bridge
