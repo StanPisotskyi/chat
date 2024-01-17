@@ -22,10 +22,20 @@
         console.log('Disconnected...');
     });
 
-    ioConnection.on('newMessage', (message) => {
-        const { from, text, createdAt } = message;
+    ioConnection.on('updateUsersList', (list) => {
+        let dataToInsert = '';
 
-        const li = `<li><div><b>Time:</b> ${createdAt}</div><div><b>Author</b>: ${from}</div><div>${text}</div></li>`;
+        list.forEach((name) => dataToInsert += `<li>${name}</li>`);
+
+        $('#usersWrapper').empty().html(dataToInsert);
+    });
+
+    ioConnection.on('newMessage', (message) => {
+        const { from, text, createdAt, isAuthor } = message;
+
+        const cssClass = isAuthor ? 'own-message' : 'message';
+
+        const li = `<li class="${cssClass}"><div class="align-center"><b>Time:</b> ${createdAt}</div><div class="align-center"><b>Author</b>: ${from}</div><div class="align-center">${text}</div></li>`;
 
         $('#messagesWrapper').prepend(li);
     });

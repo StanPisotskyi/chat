@@ -4,6 +4,8 @@ const socketIO = require('socket.io');
 const http = require('http');
 const { generateMessage } = require('./utils/message');
 const { isValidString } = require('./utils/helper');
+const Storage = require('./utils/storage');
+const storage = new Storage();
 const app = express();
 const publicPath = path.join(__dirname, '/../public');
 const port = 3000;
@@ -13,45 +15,50 @@ const io = socketIO(server);
 app.use(express.static(publicPath));
 
 io.on('connection', (socket) => {
-    console.log('Client connected!');
-
     socket.on('join', (joinChat, callback) => {
-        console.log('Join chat:', joinChat);
-
         const { name, room } = joinChat;
 
         if (!isValidString(name) || !isValidString(room)) {
-            callback('Both fields are required!');
+            return callback('Both fields are required!');
         }
 
         socket.join(room);
+        storage.removeUserById(socket.id);
+        storage.addUser(socket.id, name, room);
 
+        io.to(room).emit('updateUsersList', storage.getUsersByRoom(room));
         socket.emit('newMessage', generateMessage('Admin', `Welcome to the room: ${room}!`));
-
-        socket.broadcast.to(room).emit('newMessage', generateMessage('Admin', `New user joined the room: ${room}!`));
+        socket.broadcast.to(room).emit('newMessage', generateMessage('Admin', `${name} joined the room: ${room}!`));
 
         callback();
     });
 
     socket.on('createMessage', (message, callback) => {
-        console.log('Create message:', message);
-
         const { from, text } = message;
 
         if (!isValidString(from)) {
-            callback('User is unknown.');
+            return callback('User is unknown.');
         }
 
         if (!isValidString(text)) {
-            callback('Text is empty.');
+            return callback('Text is empty.');
         }
 
-        socket.broadcast.emit('newMessage', generateMessage(from, text));
+        const user = storage.getUserById(socket.id);
+
+        socket.emit('newMessage', generateMessage(from, text, true));
+        socket.broadcast.to(user.getRoom()).emit('newMessage', generateMessage(from, text));
         callback();
     });
 
     socket.on('disconnect', () => {
-        console.log('Client disconnected...');
+        const user = storage.removeUserById(socket.id);
+
+        if (!user) {
+            return;
+        }
+
+        io.to(user.getRoom()).emit('updateUsersList', storage.getUsersByRoom(user.getRoom()));
     });
 });
 

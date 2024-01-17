@@ -7,20 +7,27 @@
     <link rel="stylesheet" href="/css/chat.css">
 </head>
 <body>
-    <div class="row justify-content-md-center pt-3">
-        <div class="col col-sm-6">
-            <form id="messageForm">
-                <div class="form-group">
-                    <label for="message">Message</label>
-                    <textarea class="form-control" name="message" id="message" rows="3"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Fire!</button>
-            </form>
+    <div class="row pt-3 pr-3">
+        <div class="col-sm-3">
+            <ul id="usersWrapper"></ul>
         </div>
-    </div>
-    <div class="row justify-content-md-center pt-3">
-        <div class="col col-sm-6">
-            <ul id="messagesWrapper"></ul>
+        <div class="col col-sm-9">
+            <div class="row">
+                <div class="col-sm-12">
+                    <form id="messageForm">
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea class="form-control" name="message" id="message" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Fire!</button>
+                    </form>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-sm-12">
+                    <ul id="messagesWrapper"></ul>
+                </div>
+            </div>
         </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>

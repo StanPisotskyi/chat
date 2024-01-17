@@ -8,3 +8,23 @@ li {
     padding-top: 5px;
     padding-bottom: 5px;
 }
+
+.message {
+    width: 500px;
+    background-color: antiquewhite;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+.own-message {
+    width: 500px;
+    margin-left: auto;
+    margin-right: 0;
+    background-color: aqua;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+.align-center {
+    text-align: center;
+}
